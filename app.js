@@ -10,7 +10,10 @@ const port = 3000;
 app.use(bodyParser.json());
 
 const workRoutes = require('./routes/workRoutes');
+const workerRoutes = require('./routes/workerRoutes');
+
 app.use('/api/work', workRoutes);
+app.use('/api/worker', workerRoutes);
 
 // const db = require("./app/models");
 db.sequelize.sync().then(() => {
