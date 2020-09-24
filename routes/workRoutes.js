@@ -7,6 +7,21 @@ router.get('/all', (req, res) => {
   db.work.findAll().then((works) => res.send(works));
 });
 
+router.get('/:id/workerlist', (req, res) => {
+  db.worker_work.findAll({
+    attributes: [
+      'createdAt',
+      'salary',
+      [
+        db.sequelize.fn('SUM', db.sequelize.col('salary')),
+        'allEmployeeSalaries',
+      ],
+    ],
+    include: [{ model: db.worker, attributes: ['name', 'lastname'], required: true }],
+    where: { workId: req.params.id}
+  }).then((workerList) => res.send(workerList));
+});
+
 router.get('/:id', (req, res) => {
   db.work
     .findOne({ where: { id: req.params.id } })
@@ -23,6 +38,14 @@ router.put('/:id', async (req, res) => {
   db.work
     .findOne({ where: { id: req.params.id } })
     .then((work) => res.send(work));
+});
+
+router.delete('/dismiss', (req, res) => {
+  db.worker_work
+    .destroy({
+      where: { idworker: req.body.idworker, idwork: req.body.idwork },
+    })
+    .then(() => res.send('success'));
 });
 
 router.delete('/:id', (req, res) => {

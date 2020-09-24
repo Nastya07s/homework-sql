@@ -11,9 +11,11 @@ app.use(bodyParser.json());
 
 const workRoutes = require('./routes/workRoutes');
 const workerRoutes = require('./routes/workerRoutes');
+// const workerworkRoutes = require('./routes/workerworkRoutes');
 
 app.use('/api/work', workRoutes);
 app.use('/api/worker', workerRoutes);
+// app.use('/api/workerwork', workerworkRoutes);
 
 // const db = require("./app/models");
 db.sequelize.sync().then(() => {

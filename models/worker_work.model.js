@@ -1,28 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-  const Worker_work = sequelize.define("worker_work", {
+  const Worker_work = sequelize.define('worker_work', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
-    },
-    idwork:{
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    idworker:{
-      type: DataTypes.UUID,
-      allowNull: false
+      autoIncrement: true,
     },
     time: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     salary: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   });
+
+  // Worker_work.associate = function (models) {
+  //   Worker_work.hasMany(models.work, { foreignKey: 'idwork' });
+  //   // Worker_work.hasMany(models.worker, { foreignKey: 'idworker' });
+  // };
 
   return Worker_work;
 };

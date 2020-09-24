@@ -25,10 +25,38 @@ router.put('/:id', async (req, res) => {
     .then((worker) => res.send(worker));
 });
 
+router.delete('/quit', (req, res) => {
+  db.worker_work
+    .destroy({
+      where: { idworker: req.body.idworker, idwork: req.body.idwork },
+    })
+    .then(() => res.send('success'));
+});
 router.delete('/:id', (req, res) => {
   db.worker
     .destroy({ where: { id: req.params.id } })
     .then(() => res.send('success'));
+});
+
+router.post('/apply', (req, res) => {
+  db.worker_work.create({ ...req.body }).then((record) => res.send(record));
+});
+
+router.get('/:id/worklist', (req, res) => {
+  db.worker_work
+    .findAll({
+      attributes: [
+        'time',
+        'createdAt',
+        'salary',
+        [db.sequelize.fn('SUM', db.sequelize.col('salary')), 'monthSalary'],
+      ],
+      include: [{ model: db.work, attributes: ['name'], required: true }],
+      where: {
+        workerId: req.params.id,
+      }
+    })
+    .then((works) => res.send(works));
 });
 
 module.exports = router;
