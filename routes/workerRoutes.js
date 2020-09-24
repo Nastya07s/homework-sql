@@ -38,7 +38,22 @@ router.delete('/:id', (req, res) => {
     .then(() => res.send('success'));
 });
 
-router.post('/apply', (req, res) => {
+router.post('/apply', async (req, res) => {
+  const [worker_work] = await db.worker_work.findAll({
+    attributes: [
+      [db.sequelize.fn('SUM', db.sequelize.col('time')), 'workTime'],
+    ],
+    where: {
+      workerId: req.body.workerId,
+    },
+  });
+
+  const {dataValues: {workTime}} = worker_work;
+  if (workTime + req.body.time > 20) {
+    res.send('Working time limit exceeded');
+    return;
+  }
+  
   db.worker_work.create({ ...req.body }).then((record) => res.send(record));
 });
 
@@ -54,7 +69,7 @@ router.get('/:id/worklist', (req, res) => {
       include: [{ model: db.work, attributes: ['name'], required: true }],
       where: {
         workerId: req.params.id,
-      }
+      },
     })
     .then((works) => res.send(works));
 });

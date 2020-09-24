@@ -21,5 +21,5 @@ db.sequelize.sync().then(() => {
   });
 });
 
-const populateDB = require('./populate');
-populateDB();
+// const populateDB = require('./populate');
+// populateDB();
